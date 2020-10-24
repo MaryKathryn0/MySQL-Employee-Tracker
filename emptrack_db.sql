@@ -4,18 +4,32 @@ CREATE DATABASE emptrack_db;
 
 USE emptrack_db;
 
-CREATE TABLE bevs(
+CREATE TABLE dept (
   id INT NOT NULL AUTO_INCREMENT,
-  color VARCHAR(100) NOT NULL,
-  brand VARCHAR(100) NOT NULL
+  namedept VARCHAR(30) NOT NULL
 );
 
-INSERT INTO bevs (color,brand)
-VALUES ("red", "Duckhorn");
+INSERT INTO dept (deptname)
+VALUES ("hr");
 
-INSERT INTO bevs (color,brand)
-VALUES ("white", "KimCrawford");
+CREATE TABLE rol (
+  id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(30) NOT NULL
+  salary DECIMAL(10) NOT NULL
+  department_id INT NOT NULL
+);
 
-INSERT INTO bevs (color,brand)
-VALUES ("bubbly", "Chandon");
+INSERT INTO rol (title,salary,department_id)
+VALUES ("Director", "100000", "department_id");
+
+CREATE TABLE empl (
+  id INT NOT NULL AUTO_INCREMENT,
+  fname VARCHAR(30) NOT NULL
+  lname VARCHAR(30) NOT NULL
+  role_id INT NOT NULL
+  manager_id INT NOT NULL
+);
+
+INSERT INTO empl (fname,lname,role_id,manager_id)
+VALUES ("Mary", "Jane", "role_id", "manager_id");
 
