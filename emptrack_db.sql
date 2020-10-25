@@ -4,32 +4,32 @@ CREATE DATABASE emptrack_db;
 
 USE emptrack_db;
 
-CREATE TABLE dept (
-  id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE department (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   namedept VARCHAR(30) NOT NULL
 );
 
-INSERT INTO dept (deptname)
+INSERT INTO department (namedept)
 VALUES ("hr");
 
-CREATE TABLE rol (
-  id INT NOT NULL AUTO_INCREMENT,
-  title VARCHAR(30) NOT NULL
-  salary DECIMAL(10) NOT NULL
-  department_id INT NOT NULL
+CREATE TABLE role (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(30) NOT NULL,
+  salary DECIMAL(10,2) NOT NULL,
+  department_id INT NOT NULL 
 );
 
-INSERT INTO rol (title,salary,department_id)
-VALUES ("Director", "100000", "department_id");
+INSERT INTO role (title,salary,department_id)
+VALUES ("Director", "100000", "1234");
 
-CREATE TABLE empl (
-  id INT NOT NULL AUTO_INCREMENT,
-  fname VARCHAR(30) NOT NULL
-  lname VARCHAR(30) NOT NULL
-  role_id INT NOT NULL
+CREATE TABLE employee (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  fname VARCHAR(30) NOT NULL,
+  lname VARCHAR(30) NOT NULL,
+  role_id INT NOT NULL,
   manager_id INT NOT NULL
 );
 
-INSERT INTO empl (fname,lname,role_id,manager_id)
-VALUES ("Mary", "Jane", "role_id", "manager_id");
+INSERT INTO employee (fname,lname,role_id,manager_id)
+VALUES ("Mary", "Jane", "1000", "1111");
 
