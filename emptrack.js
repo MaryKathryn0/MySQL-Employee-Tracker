@@ -94,13 +94,43 @@ function addRole() {
 }
 
 function addEmpl() {
-    inquirer.prompt({
-        type: "input",
-        message: "Input department name"
-    })
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Input first name:",
+            name: "fname"
+        },
+        {
+            type: "input",
+            message: "Input last name:",
+            name: "lname"
+        },
+        {
+            type: "input",
+            message: "Input role id:",
+            name: "role_id"
+        },
+        {
+            type: "input",
+            message: "Input manager id:",
+            name: "manager_id"
+        }
+    ])
         .then(function (response) {
             console.log(response);
         })
+}
+
+function viewDept() {
+    inquirer.prompt
+}
+
+function viewRole() {
+    inquirer.prompt
+}
+
+function viewEmpl() {
+    inquirer.prompt
 }
 
 
