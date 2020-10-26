@@ -1,7 +1,26 @@
 var mysql = require("mysql");
-var db = require("./database")
+//var db = require("./database")
 var inquirer = require("inquirer");
+var connection = mysql.createConnection({
+    host: "localhost",
 
+    // Your port; if not 3306
+    port: 3306,
+
+    // Your username
+    user: "root",
+
+    // Your password
+    password: "meowsers",
+    database: "emptrack_db"
+});
+
+// connect to the mysql server and sql database
+connection.connect(function (err) {
+    if (err) throw err;
+    // run the start function after the connection is made to prompt the user
+
+});
 
 function start() {
 
@@ -122,15 +141,52 @@ function addEmpl() {
 }
 
 function viewDept() {
-    inquirer.prompt
+
+    var query = "SELECT department FROM emptrack_db GROUP BY department HAVING id(*) > 1";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].artist);
+        }
+        runSearch();
+    });
+
 }
 
 function viewRole() {
-    inquirer.prompt
+    inquirer.prompt({
+        name: "Role",
+        type: "input",
+        message: "View employees by <insert role>?"
+    })
+        .then(function (answer) {
+            console.log(answer.role);
+            connection.query("SELECT * FROM emptrack_db WHERE ?", { role: answer.role }, function (err, res) {
+                if (err) throw err;
+                // console.log(
+                //     "Position: " +
+                //     res[0].position +
+                //     " || Song: " +
+                //     res[0].song +
+                //     " || Artist: " +
+                //     res[0].artist +
+                //     " || Year: " +
+                //     res[0].year
+                // );
+                runSearch();
+            });
+        });
 }
 
 function viewEmpl() {
-    inquirer.prompt
+    var query = "SELECT employee FROM emptrack_db GROUP BY employee HAVING id(*) > 1";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].artist);
+        }
+        runSearch();
+    });
 }
 
 
