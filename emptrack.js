@@ -34,9 +34,9 @@ function start() {
                 "Add departments",
                 "Add roles",
                 "Add employees",
-                "View departments",
-                "View roles",
-                "View employees",
+                "View employees by department",
+                "View employees by role",
+                "View all employees",
                 "Update employee role",
                 "Exit"
             ]
