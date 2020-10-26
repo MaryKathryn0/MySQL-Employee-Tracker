@@ -39,21 +39,21 @@ function start() {
                     break;
 
                 case "View departments":
-                    addDept();
+                    viewDept();
                     break;
 
                 case "View roles":
-                    addRole();
+                    viewRole();
                     break;
 
                 case "View employees":
-                    addEmpl();
+                    viewEmpl();
                     break;
 
                 case "Update employee role":
                     updateRole();
                     break;
-    
+
                 case "Exit":
                     exit();
                     break;
@@ -66,7 +66,38 @@ function addDept() {
         type: "input",
         message: "Input department name"
     })
+        .then(function (response) {
+            console.log(response);
+        })
+}
 
+function addRole() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Input role title:",
+            name: "title"
+        },
+        {
+            type: "input",
+            message: "Input salary:",
+            name: "salary"
+        },
+        {
+            type: "input",
+            message: "Input department id:",
+            name: "department_id"
+        }
+    ]).then(function (response) {
+        console.log(response);
+    })
+}
+
+function addEmpl() {
+    inquirer.prompt({
+        type: "input",
+        message: "Input department name"
+    })
         .then(function (response) {
             console.log(response);
         })
