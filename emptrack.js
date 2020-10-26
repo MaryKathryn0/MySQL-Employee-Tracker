@@ -141,14 +141,12 @@ function addEmpl() {
 }
 
 function viewDept() {
-
-    var query = "SELECT department FROM emptrack_db GROUP BY department HAVING id(*) > 1";
     connection.query(query, function (err, res) {
-        if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-            console.log(res[i].artist);
+        function(err, res) {
+            if(err) throw err
+            console.table(res)
+            startPrompt()
         }
-        runSearch();
     });
 
 }
@@ -179,14 +177,12 @@ function viewRole() {
 }
 
 function viewEmpl() {
-    var query = "SELECT employee FROM emptrack_db GROUP BY employee HAVING id(*) > 1";
-    connection.query(query, function (err, res) {
+    connection.query("SELECT e.id, e.fname, e.lname, role.title, department.name AS department, role.salary, concat(m.fname, ' ' ,  m.lname) AS manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC");
+    function(err, res) {
         if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-            console.log(res[i].artist);
-        }
-        runSearch();
-    });
+        console.table(res)
+        startPrompt();
+    }
 }
 
 
