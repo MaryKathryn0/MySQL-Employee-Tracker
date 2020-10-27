@@ -140,50 +140,52 @@ function addEmpl() {
         })
 }
 
-function viewDept() {
-    connection.query(query, function (err, res) {
-        function(err, res) {
-            if(err) throw err
-            console.table(res)
-            startPrompt()
-        }
-    });
+// function viewDept() {
+//     let query = "SELECT e.id, e.first_name, e.last_name, role.title, department.name AS department, role.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC";
+//     connection.query(query, function (err, res) {
+//         function(err, res) {
+//             if(err) throw err
+//             console.table(res)
+//             startPrompt()
+//         }
+//     });
 
-}
+// }
 
-function viewRole() {
-    inquirer.prompt({
-        name: "Role",
-        type: "input",
-        message: "View employees by <insert role>?"
-    })
-        .then(function (answer) {
-            console.log(answer.role);
-            connection.query("SELECT * FROM emptrack_db WHERE ?", { role: answer.role }, function (err, res) {
-                if (err) throw err;
-                // console.log(
-                //     "Position: " +
-                //     res[0].position +
-                //     " || Song: " +
-                //     res[0].song +
-                //     " || Artist: " +
-                //     res[0].artist +
-                //     " || Year: " +
-                //     res[0].year
-                // );
-                runSearch();
-            });
-        });
-}
+// function viewRole() {
+//     inquirer.prompt({
+//         name: "Role",
+//         type: "input",
+//         message: "View employees by <insert role>?"
+//     })
+//         .then(function (answer) {
+//             console.log(answer.role);
+//             connection.query("SELECT * FROM emptrack_db WHERE ?", { role: answer.role }, function (err, res) {
+//                 if (err) throw err;
+//                 // console.log(
+//                 //     "Position: " +
+//                 //     res[0].position +
+//                 //     " || Song: " +
+//                 //     res[0].song +
+//                 //     " || Artist: " +
+//                 //     res[0].artist +
+//                 //     " || Year: " +
+//                 //     res[0].year
+//                 // );
+//                 runSearch();
+//             });
+//         });
+// }
 
-function viewEmpl() {
-    connection.query("SELECT e.id, e.fname, e.lname, role.title, department.name AS department, role.salary, concat(m.fname, ' ' ,  m.lname) AS manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC");
-    function(err, res) {
-        if (err) throw err;
-        console.table(res)
-        startPrompt();
-    }
-}
+// function viewEmpl() {
+//     let query = "SELECT e.id, e.first_name, e.last_name, role.title, department.name AS department, role.salary, concat(m.first_name, ' ' ,  m.last_name) AS manager FROM employee e LEFT JOIN employee m ON e.manager_id = m.id INNER JOIN role ON e.role_id = role.id INNER JOIN department ON role.department_id = department.id ORDER BY ID ASC";
+//     connection.query(
+//     function(err, res) {
+//         if (err) throw err;
+//         console.table(res)
+//         startPrompt();
+//     }
+// })
 
 
 
