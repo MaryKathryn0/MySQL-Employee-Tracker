@@ -117,12 +117,12 @@ function addEmpl() {
         {
             type: "input",
             message: "Input first name:",
-            name: "fname"
+            name: "first_name"
         },
         {
             type: "input",
             message: "Input last name:",
-            name: "lname"
+            name: "last_name"
         },
         {
             type: "input",

@@ -24,12 +24,12 @@ VALUES ("Director", "100000", "1234");
 
 CREATE TABLE employee (
   id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  fname VARCHAR(30) NOT NULL,
-  lname VARCHAR(30) NOT NULL,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
   role_id INT NOT NULL,
   manager_id INT NOT NULL
 );
 
-INSERT INTO employee (fname,lname,role_id,manager_id)
+INSERT INTO employee (first_name,last_name,role_id,manager_id)
 VALUES ("Mary", "Jane", "1000", "1111");
 
