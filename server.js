@@ -1,5 +1,5 @@
 var mysql = require("mysql");
-//var db = require("./database")
+var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -15,165 +15,95 @@ var connection = mysql.createConnection({
     database: "emptrack_db"
 });
 
-// connect to the mysql server and sql database
-connection.connect(function (err) {
-    if (err) throw err;
-    // run the start function after the connection is made to prompt the user
-
-});
-
-function start() {
-
-
-    inquirer.prompt([
-        {
-            type: "list",
-            message: "Choose from the following actions:",
-            name: "action",
-            choices: [
-                "Add departments",
-                "Add roles",
-                "Add employees",
-                "View employees by department",
-                "View employees by role",
-                "View all employees",
-                "Update employee role",
-                "Exit"
-            ]
-        },
-    ])
-        .then(function (response) {
-
-            switch (response.action) {
-                case "Add departments":
-                    addDept();
-                    break;
-
-                case "Add roles":
-                    addRole();
-                    break;
-
-                case "Add employees":
-                    addEmpl();
-                    break;
-
-                case "View departments":
-                    viewDept();
-                    break;
-
-                case "View roles":
-                    viewRole();
-                    break;
-
-                case "View employees":
-                    viewEmpl();
-                    break;
-
-                case "Update employee role":
-                    updateRole();
-                    break;
-
-                case "Exit":
-                    exit();
-                    break;
-            }
-        });
+async function start(){
+    const {menu} = await askMainMenu();
+    if(menu==="Add Role"){
+        // User gives name and salary of new role
+        roleInfo = await askRoleInfo();
+        console.log("Role Info: ", roleInfo);
+        // database queried for all exisiting department
+        deptList = await getDepartment(connection);
+        console.log("Deptartment List: ", deptList);
+        // user is asked to select a department
+        deptSelected = await selectDepartment(deptList);
+        console.log("Department Selected: ", deptSelected);
+        // query database for ID of selected department
+        deptID = await getDeptId(connection, deptSelected.dept);
+        console.log("Department ID: ", deptID);
+        start();
+    }
 }
 
-function addDept() {
-    inquirer.prompt({
-        type: "input",
-        message: "Input department name"
-    })
-        .then(function (response) {
-            console.log(response);
-        })
-}
+// function start() {
 
-function addRole() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "Input role title:",
-            name: "title"
-        },
-        {
-            type: "input",
-            message: "Input salary:",
-            name: "salary"
-        },
-        {
-            type: "list",
-            message: "Input department id:",
-            name: "department_id"
-        }
-    ]).then(function (response) {
-        console.log(response);
-    })
-}
 
-function addEmpl() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "Input first name:",
-            name: "first_name"
-        },
-        {
-            type: "input",
-            message: "Input last name:",
-            name: "last_name"
-        },
-        {
-            type: "input",
-            message: "Input role id:",
-            name: "role_id"
-        },
-        {
-            type: "input",
-            message: "Input manager id:",
-            name: "manager_id"
-        }
-    ])
-        .then(function (response) {
-            console.log(response);
-        })
-}
+//     inquirer.prompt([
+//         {
+//             type: "list",
+//             message: "Choose from the following actions:",
+//             name: "action",
+//             choices: [
+//                 "Add departments",
+//                 "Add roles",
+//                 "Add employees",
+//                 "View employees by department",
+//                 "View employees by role",
+//                 "View all employees",
+//                 "Update employee role",
+//                 "Exit"
+//             ]
+//         },
+//     ])
+//         .then(async function (response) {
 
-// function viewDept() {
-    
+//             switch (response.action) {
+//                 case "Add departments":
+//                     //addDept();
+//                     start()
+//                     break;
 
-// }
+//                 case "Add roles":
+//                     results = await addRole(connection);
+//                     console.log(`Inserted ${results.affectedRows} entries`);
+//                     start()
+//                     break;
 
-// function viewRole() {
-//     inquirer.prompt({
-//         name: "Role",
-//         type: "input",
-//         message: "View employees by <insert role>?"
-//     })
-//         .then(function (answer) {
-//             console.log(answer.role);
-//             connection.query("SELECT * FROM emptrack_db WHERE ?", { role: answer.role }, function (err, res) {
-//                 if (err) throw err;
-//                 // console.log(
-//                 //     "Position: " +
-//                 //     res[0].position +
-//                 //     " || Song: " +
-//                 //     res[0].song +
-//                 //     " || Artist: " +
-//                 //     res[0].artist +
-//                 //     " || Year: " +
-//                 //     res[0].year
-//                 // );
-//                 runSearch();
-//             });
+//                 case "Add employees":
+//                     //addEmpl();
+//                     start()
+//                     break;
+
+//                 case "View departments":
+//                     //viewDept();
+//                     start()
+//                     break;
+
+//                 case "View roles":
+//                     //viewRole();
+//                     start()
+//                     break;
+
+//                 case "View employees":
+//                     //viewEmpl();
+//                     start()
+//                     break;
+
+//                 case "Update employee role":
+//                     //updateRole();
+//                     start();
+//                     break;
+
+//                 case "Exit":
+//                     //exit();
+//                     start();
+//                     break;
+//             }
 //         });
 // }
 
-// function viewEmpl() {
-//}
 
 
 
 
-start();
+// connect to the mysql server and sql database
+connection.connect(async () => start());
