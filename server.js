@@ -119,11 +119,16 @@ async function start() {
     }
     else if (menu === "Update Employee Role"){
         //get list of employees
+        employeeList = await getEmployees(connection);
         // select employee
+        // // emplSelected = await selectEmployee(employeeList);
         // get employee ID
         // get list of Roles
+        roleList = await getRoles(connection);
         // select role
+        roleSelected = await selectRole(roleList);
         //get ID of role
+        roleID = await getRoleId(connection, roleSelected.role);
         // update employee to new role
     }
 }

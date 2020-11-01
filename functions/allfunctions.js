@@ -233,6 +233,16 @@ function addEmployee(connection, empName, roleID, mngID) {
     })
 }
 
+// function selectEmployee(roles) {
+//     employeeeList = employees.map(el => el.empName);
+//     return inquirer.prompt([{
+//         type: "list",
+//         message: "select employee",
+//         name: "employee",
+//         choices: employeeList
+//     }])
+// }
+
 
 module.exports = {
     askMainMenu,
