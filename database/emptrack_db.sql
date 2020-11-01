@@ -37,11 +37,3 @@ CREATE TABLE employee (
 
 INSERT INTO employee (first_name,last_name,role_id,manager_id)
 VALUES ("Mary", "Jane", 1, NULL), ("John", "Doe", 3, NULL), ("Bilbo", "Baggins", 4, 2), ("Snoop", "Dog", 2, 1), ("Lois", "Lane", 5, NULL), ("Casper", "Ghost", 6, 5);
-
-SELECT * FROM employee;
-
-SELECT emp.id, emp.first_name, emp.last_name, role.title, department.name AS department, role.salary, CONCAT(mng.first_name, ' ', mng.last_name) AS manager
-FROM employee AS emp
-INNER JOIN role on emp.role_id = role.id
-INNER JOIN department ON role.department_id = department_id
-LEFT JOIN employee as mng ON emp.manager_id = mng.id

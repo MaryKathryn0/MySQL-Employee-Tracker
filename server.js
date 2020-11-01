@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId,
-addRole, getRoles, selectRole, getRoleId, deleteRole  } = require("./functions/allfunctions");
+addRole, getRoles, selectRole, getRoleId, deleteRole, getEmployees, emplByDept  } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -57,6 +57,28 @@ async function start(){
         console.log(`Inserted ${results.affectedRows} entries`);
         start();
     }
+    else if (menu === "View All Employees") {
+        //display all employees
+        employeeList = await getEmployees(connection);
+        console.table(employeeList);
+        start();
+    }
+    else if(menu==="View All Departments"){
+        // display all departments
+        deptList = await getDepartment(connection);
+        console.table(deptList);
+        start();
+    }
+    else if(menu === "View All Employees by Department")
+    // get list of departments
+    deptList = await getDepartment(connection);
+    console.log("Dept List: ", deptList);
+    // select a department
+    deptSelected = await selectDepartment(deptList);
+    // view employees in department
+    results = await emplByDept(connection, deptSelected.dept);
+    console.table(results);
+    start();
 }
 
 // function start() {

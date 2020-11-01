@@ -114,6 +114,39 @@ function deleteRole(connection,role_id) {
         })
     })
 }
+//view all employees
+function getEmployees(connection) {
+    return new Promise((resolve, reject) => {
+        let sqlQuery = "SELECT emp.id, emp.first_name, emp.last_name, role.title, department.name AS department,"
+        sqlQuery += " role.salary, CONCAT(mng.first_name, ' ', mng.last_name) AS manager"
+        sqlQuery += " FROM employee AS emp"
+        sqlQuery += " INNER JOIN role on emp.role_id = role.id"
+        sqlQuery += " INNER JOIN department ON role.department_id = department_id"
+        sqlQuery += " LEFT JOIN employee as mng ON emp.manager_id = mng.id"
+
+        connection.query(sqlQuery, function(err,data) {
+            if(err)
+            reject(err);
+            else
+            resolve(data);
+        })
+    })
+}
+
+function emplByDept(connection,department) {
+    return new Promise((resolve,reject) => {
+        let sqlQuery = "SELECT emp.id, emp.first_name, emp.last_name, role.title, department.name AS department, CONCAT(mng.first_name, ' ', mng.last_name) AS manager";
+        sqlQuery += " FROM employee AS emp INNER JOIN role ON emp.role_id = role.id"
+        sqlQuery += " INNER JOIN department on role.department_id = department.id LEFT JOIN employee AS mng ON emp.manager_id = mng.id"
+        sqlQuery += " WHERE department.name = ?"
+        connection.query(sqlQuery,department, function(err,data) {
+            if(err)
+            reject(err);
+            else
+            resolve(data);
+        })  
+    })
+}
 
 module.exports = {
     askMainMenu,
@@ -125,7 +158,9 @@ module.exports = {
     getRoles,
     selectRole,
     getRoleId,
-    deleteRole
+    deleteRole,
+    getEmployees,
+    emplByDept
 }
 
 // function addDept() {
