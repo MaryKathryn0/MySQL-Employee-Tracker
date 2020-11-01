@@ -61,7 +61,7 @@ function getDeptId(connection, dept) {
 function addRole(connection, roleInfo, deptID) {
     return new Promise((resolve, reject) => {
         let sqlQuery = "INSERT INTO role (title, salary, department_id)";
-        sqlQuery+= "VALUES (?, ?, ?)";
+        sqlQuery += "VALUES (?, ?, ?)";
         connection.query(sqlQuery, [roleInfo.title, roleInfo.salary, deptID], function (err, data) {
             if (err)
                 reject(err);
@@ -71,19 +71,19 @@ function addRole(connection, roleInfo, deptID) {
     })
 }
 
-function getRoles(connection){
-    return new Promise((resolve,reject)=>{
-        connection.query("SELECT title FROM role", function(err,data) {
+function getRoles(connection) {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT title FROM role", function (err, data) {
             if (err)
-            reject(err);
-            else 
-            resolve(data);
+                reject(err);
+            else
+                resolve(data);
         })
     })
 }
 
 function selectRole(roles) {
-    roleList = roles.map(el=>el.title);
+    roleList = roles.map(el => el.title);
     return inquirer.prompt([{
         type: "list",
         message: "select role",
@@ -104,9 +104,9 @@ function getRoleId(connection, role) {
 }
 
 // write function that returns a promise with a query of DELETE FROM role WHERE id = ?
-function deleteRole(connection,role_id) {
+function deleteRole(connection, role_id) {
     return new Promise((resolve, reject) => {
-        connection.query("DELETE FROM role WHERE id = ?", role_id, function (err,data) {
+        connection.query("DELETE FROM role WHERE id = ?", role_id, function (err, data) {
             if (err)
                 reject(err);
             else
@@ -124,27 +124,63 @@ function getEmployees(connection) {
         sqlQuery += " INNER JOIN department ON role.department_id = department_id"
         sqlQuery += " LEFT JOIN employee as mng ON emp.manager_id = mng.id"
 
-        connection.query(sqlQuery, function(err,data) {
-            if(err)
-            reject(err);
+        connection.query(sqlQuery, function (err, data) {
+            if (err)
+                reject(err);
             else
-            resolve(data);
+                resolve(data);
         })
     })
 }
 
-function emplByDept(connection,department) {
-    return new Promise((resolve,reject) => {
+function emplByDept(connection, department) {
+    return new Promise((resolve, reject) => {
         let sqlQuery = "SELECT emp.id, emp.first_name, emp.last_name, role.title, department.name AS department, CONCAT(mng.first_name, ' ', mng.last_name) AS manager";
         sqlQuery += " FROM employee AS emp INNER JOIN role ON emp.role_id = role.id"
         sqlQuery += " INNER JOIN department on role.department_id = department.id LEFT JOIN employee AS mng ON emp.manager_id = mng.id"
         sqlQuery += " WHERE department.name = ?"
-        connection.query(sqlQuery,department, function(err,data) {
-            if(err)
-            reject(err);
+        connection.query(sqlQuery, department, function (err, data) {
+            if (err)
+                reject(err);
             else
-            resolve(data);
-        })  
+                resolve(data);
+        })
+    })
+}
+
+function getManager(connection) {
+    // list should display ONE column of first AND last name = CONCAT
+    return new Promise((resolve, reject) => {
+        let sqlQuery = "SELECT CONCAT(emp.first_name, ' ', emp.last_name) AS name FROM employee AS emp WHERE manager_id IS NULL"
+        connection.query(sqlQuery, function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
+
+function selectManager(mngs) {
+    return inquirer.prompt([{
+        type: "list",
+        message: "select manager",
+        name: "manager",
+        choices: mngs
+    }])
+}
+
+function getEmpsByManager(connection, mng) {
+    return new Promise((resolve, reject) => {
+        let sqlQuery = "SELECT CONCAT(emp.first_name, ' ', emp.last_name) AS name FROM employee AS emp"
+        sqlQuery += " LEFT JOIN employee AS mng ON emp.manager_id = mng.id"
+        sqlQuery += " WHERE CONCAT(mng.first_name, ' ', mng.last_name) = ?";
+        connection.query(sqlQuery, mng, function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
     })
 }
 
@@ -160,7 +196,10 @@ module.exports = {
     getRoleId,
     deleteRole,
     getEmployees,
-    emplByDept
+    emplByDept,
+    getManager,
+    selectManager,
+    getEmpsByManager
 }
 
 // function addDept() {

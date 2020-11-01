@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId,
-addRole, getRoles, selectRole, getRoleId, deleteRole, getEmployees, emplByDept  } = require("./functions/allfunctions");
+    addRole, getRoles, selectRole, getRoleId, deleteRole, getEmployees, emplByDept, getManager, selectManager, getEmpsByManager } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -16,9 +16,9 @@ var connection = mysql.createConnection({
     database: "emptrack_db"
 });
 
-async function start(){
-    const {menu} = await askMainMenu();
-    if(menu==="Add Role"){
+async function start() {
+    const { menu } = await askMainMenu();
+    if (menu === "Add Role") {
         // User gives name and salary of new role
         roleInfo = await askRoleInfo();
         //console.log("Role Info: ", roleInfo);
@@ -32,17 +32,17 @@ async function start(){
         deptID = await getDeptId(connection, deptSelected.dept);
         //console.log("Department ID: ", deptID);
         // add role to database
-        results = await addRole(connection,roleInfo,deptID[0].id)
+        results = await addRole(connection, roleInfo, deptID[0].id)
         console.log(`Inserted ${results.affectedRows} entries`);
         start();
     }
-    else if(menu === "View All Roles"){
+    else if (menu === "View All Roles") {
         // display all roles in the database
         roleList = await getRoles(connection);
         console.table(roleList);
         start();
     }
-    else if(menu === "Remove Role"){
+    else if (menu === "Remove Role") {
         //get roles to display
         roleList = await getRoles(connection);
         //console.log("Role List: ", roleList);
@@ -53,7 +53,7 @@ async function start(){
         roleID = await getRoleId(connection, roleSelected.role);
         //console.log("Role ID: ", roleID);
         //remove role
-        results = await deleteRole(connection,roleID[0].id)
+        results = await deleteRole(connection, roleID[0].id)
         console.log(`Inserted ${results.affectedRows} entries`);
         start();
     }
@@ -63,22 +63,35 @@ async function start(){
         console.table(employeeList);
         start();
     }
-    else if(menu==="View All Departments"){
+    else if (menu === "View All Departments") {
         // display all departments
         deptList = await getDepartment(connection);
         console.table(deptList);
         start();
     }
-    else if(menu === "View All Employees by Department")
-    // get list of departments
-    deptList = await getDepartment(connection);
-    console.log("Dept List: ", deptList);
-    // select a department
-    deptSelected = await selectDepartment(deptList);
-    // view employees in department
-    results = await emplByDept(connection, deptSelected.dept);
-    console.table(results);
-    start();
+    else if (menu === "View All Employees by Department") {
+        // get list of departments
+        deptList = await getDepartment(connection);
+        console.log("Dept List: ", deptList);
+        // select a department
+        deptSelected = await selectDepartment(deptList);
+        // view employees in department
+        results = await emplByDept(connection, deptSelected.dept);
+        console.table(results);
+        start();
+    }
+    else if (menu === "View All Employees by Manager") {
+        //get list of managers
+        mngList = await getManager(connection);
+        console.log("Manager List", mngList);
+        //select the manager
+        mngSelected = await selectManager(mngList);
+        console.log("Selected Manager", mngSelected);
+        //show list of employees under that manager
+        results = await getEmpsByManager(connection, mngSelected.manager);
+        console.table(results);
+        start();
+    }
 }
 
 // function start() {
