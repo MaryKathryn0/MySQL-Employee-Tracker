@@ -117,6 +117,15 @@ async function start() {
         console.log(`Inserted ${results.affectedRows} entries`);
         start();
     }
+    else if (menu === "Update Employee Role"){
+        //get list of employees
+        // select employee
+        // get employee ID
+        // get list of Roles
+        // select role
+        //get ID of role
+        // update employee to new role
+    }
 }
 
 // function start() {
