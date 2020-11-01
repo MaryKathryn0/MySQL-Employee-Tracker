@@ -1,9 +1,9 @@
 const inquirer = require("inquirer");
 
-const choices=["View All Employees", "View All Employees by Department", "View All Employees by Manager",
-"Add Employee", "Remove Employee", "Update Employee Role", "Update Employee Manager",
-"View All Roles", "Add Role", "Remove Role",
-"View All Departments", "Add Department", "Remove Department", "Exit"];
+const choices = ["View All Employees", "View All Employees by Department", "View All Employees by Manager",
+    "Add Employee", "Remove Employee", "Update Employee Role", "Update Employee Manager",
+    "View All Roles", "Add Role", "Remove Role",
+    "View All Departments", "Add Department", "Remove Department", "Exit"];
 
 function askMainMenu() {
     return inquirer.prompt([{
@@ -47,13 +47,26 @@ function selectDepartment(deptList) {
     }])
 }
 
-function getDeptId(connection, dept){
-    return new Promise((resolve, reject)=>{
-        connection.query("SELECT id FROM department where department.name = ?", dept, function(err,data){
-            if(err)
-            reject(err);
+function getDeptId(connection, dept) {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT id FROM department where department.name = ?", dept, function (err, data) {
+            if (err)
+                reject(err);
             else
-            resolve(data);
+                resolve(data);
+        })
+    })
+}
+
+function addRole(connection, roleInfo, deptID) {
+    return new Promise((resolve, reject) => {
+        let sqlQuery = "INSERT INTO role (title, salary, department_id)";
+        sqlQuery+= "VALUES (?, ?, ?)";
+        connection.query(sqlQuery, [roleInfo.title, roleInfo.salary, deptID], function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
         })
     })
 }
@@ -64,7 +77,8 @@ module.exports = {
     getDepartment,
     askRoleInfo,
     selectDepartment,
-    getDeptId
+    getDeptId,
+    addRole
 }
 
 // function addDept() {

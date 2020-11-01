@@ -1,5 +1,6 @@
 var mysql = require("mysql");
-var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId } = require("./functions/allfunctions");
+var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId,
+addRole, getRoles } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -30,6 +31,15 @@ async function start(){
         // query database for ID of selected department
         deptID = await getDeptId(connection, deptSelected.dept);
         console.log("Department ID: ", deptID);
+        // add role to database
+        results = await addRole(connection,roleInfo,deptID[0].id)
+        console.log(`Inserted ${results.affectedRows} entries`);
+        start();
+    }
+    else if(menu === "View All Roles"){
+        // display all roles in the database
+        roleList = await getRoles(connection);
+        console.table(roleList);
         start();
     }
 }
@@ -107,3 +117,12 @@ async function start(){
 
 // connect to the mysql server and sql database
 connection.connect(async () => start());
+
+
+// Variables/File Delcartion TOP
+
+// Function Definitions MIDDLE
+
+// Function Calls BOTTOM
+
+// JavaScript doesn't care about placement, other languages do!
