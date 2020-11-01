@@ -1,6 +1,6 @@
 var mysql = require("mysql");
 var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId,
-addRole, getRoles } = require("./functions/allfunctions");
+addRole, getRoles, selectRole, getRoleId, deleteRole  } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -21,16 +21,16 @@ async function start(){
     if(menu==="Add Role"){
         // User gives name and salary of new role
         roleInfo = await askRoleInfo();
-        console.log("Role Info: ", roleInfo);
+        //console.log("Role Info: ", roleInfo);
         // database queried for all exisiting department
         deptList = await getDepartment(connection);
-        console.log("Deptartment List: ", deptList);
+        //console.log("Deptartment List: ", deptList);
         // user is asked to select a department
         deptSelected = await selectDepartment(deptList);
-        console.log("Department Selected: ", deptSelected);
+        //console.log("Department Selected: ", deptSelected);
         // query database for ID of selected department
         deptID = await getDeptId(connection, deptSelected.dept);
-        console.log("Department ID: ", deptID);
+        //console.log("Department ID: ", deptID);
         // add role to database
         results = await addRole(connection,roleInfo,deptID[0].id)
         console.log(`Inserted ${results.affectedRows} entries`);
@@ -40,6 +40,21 @@ async function start(){
         // display all roles in the database
         roleList = await getRoles(connection);
         console.table(roleList);
+        start();
+    }
+    else if(menu === "Remove Role"){
+        //get roles to display
+        roleList = await getRoles(connection);
+        //console.log("Role List: ", roleList);
+        //select role
+        roleSelected = await selectRole(roleList);
+        //console.log("Role Selected: ", roleSelected);
+        //get id of role
+        roleID = await getRoleId(connection, roleSelected.role);
+        //console.log("Role ID: ", roleID);
+        //remove role
+        results = await deleteRole(connection,roleID[0].id)
+        console.log(`Inserted ${results.affectedRows} entries`);
         start();
     }
 }

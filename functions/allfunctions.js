@@ -71,6 +71,49 @@ function addRole(connection, roleInfo, deptID) {
     })
 }
 
+function getRoles(connection){
+    return new Promise((resolve,reject)=>{
+        connection.query("SELECT title FROM role", function(err,data) {
+            if (err)
+            reject(err);
+            else 
+            resolve(data);
+        })
+    })
+}
+
+function selectRole(roles) {
+    roleList = roles.map(el=>el.title);
+    return inquirer.prompt([{
+        type: "list",
+        message: "select role",
+        name: "role",
+        choices: roleList
+    }])
+}
+
+function getRoleId(connection, role) {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT id FROM role WHERE title = ?", role, function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
+
+// write function that returns a promise with a query of DELETE FROM role WHERE id = ?
+function deleteRole(connection,role_id) {
+    return new Promise((resolve, reject) => {
+        connection.query("DELETE FROM role WHERE id = ?", role_id, function (err,data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
 
 module.exports = {
     askMainMenu,
@@ -78,7 +121,11 @@ module.exports = {
     askRoleInfo,
     selectDepartment,
     getDeptId,
-    addRole
+    addRole,
+    getRoles,
+    selectRole,
+    getRoleId,
+    deleteRole
 }
 
 // function addDept() {
