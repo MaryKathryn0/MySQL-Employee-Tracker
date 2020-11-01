@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId,
-    addRole, getRoles, selectRole, getRoleId, deleteRole, getEmployees, emplByDept, getManager, selectManager, getEmpsByManager } = require("./functions/allfunctions");
+    addRole, getRoles, selectRole, getRoleId, deleteRole, getEmployees,
+    emplByDept, getManager, selectManager, getEmpsByManager, getEmplName, selectEmpManager, getEmpId, addEmployee } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -90,6 +91,30 @@ async function start() {
         //show list of employees under that manager
         results = await getEmpsByManager(connection, mngSelected.manager);
         console.table(results);
+        start();
+    }
+    else if (menu === "Add Employee") {
+        //get name
+        empName = await getEmplName();
+        console.log("Add Employee",empName);
+        //select role
+        roleList = await getRoles(connection);
+        roleSelected = await selectRole(roleList);
+        roleID = await getRoleId(connection, roleSelected.role);
+        //ask if manager
+        mngList = await getManager(connection);
+        mngSelected = await selectEmpManager(mngList);
+        if(mngSelected.mng !== "None"){
+            // if user DID NOT select None, get ID of manager
+            mngID = await getEmpId(connection,mngSelected.manager);
+            // add employee to database
+            results = await addEmployee(connection,empName,roleID[0].id, mngID[0].id);
+        }
+        else{
+            // if user DID select None, pass in 0 for manager
+            results = await addEmployee(connection,empName,roleID[0].id, 0);
+        }
+        console.log(`Inserted ${results.affectedRows} entries`);
         start();
     }
 }

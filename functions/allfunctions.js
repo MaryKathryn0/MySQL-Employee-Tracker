@@ -184,6 +184,56 @@ function getEmpsByManager(connection, mng) {
     })
 }
 
+function getEmplName() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "Input first name:",
+            name: "first_name"
+        },
+        {
+            type: "input",
+            message: "Input last name:",
+            name: "last_name"
+        }
+    ])
+}
+
+function selectEmpManager(mngs) {
+    mngs.unshift("None");
+    return inquirer.prompt([{
+        type: "list",
+        message: "select manager",
+        name: "manager",
+        choices: mngs
+    }])
+}
+
+function getEmpId(connection, emp) {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT id FROM employee WHERE CONCAT(first_name, ' ', last_name)= ?", emp, function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
+
+function addEmployee(connection, empName, roleID, mngID) {
+    return new Promise((resolve, reject) => {
+        let sqlQuery = "INSERT INTO employee (first_name,last_name,role_id,manager_id)"
+        sqlQuery += " VALUES (?, ?, ?, NULLIF(?,0))";
+        connection.query(sqlQuery, [empName.first_name, empName.last_name, roleID, mngID], function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
+
+
 module.exports = {
     askMainMenu,
     getDepartment,
@@ -199,7 +249,11 @@ module.exports = {
     emplByDept,
     getManager,
     selectManager,
-    getEmpsByManager
+    getEmpsByManager,
+    getEmplName,
+    selectEmpManager,
+    getEmpId,
+    addEmployee
 }
 
 // function addDept() {
