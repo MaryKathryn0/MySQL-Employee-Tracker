@@ -287,57 +287,7 @@ module.exports = {
 //     })
 // }
 
-// async function addRole() {
-//     deptList = await getDepartments();
-//     inquirer.prompt([
-//         {
-//             type: "input",
-//             message: "Input role title:",
-//             name: "title"
-//         },
-//         {
-//             type: "input",
-//             message: "Input salary:",
-//             name: "salary"
-//         },
-//         {
-//             type: "list",
-//             message: "Choose Department:",
-//             name: "department_name",
-//             choices: deptList
-//         }
-//     ]).then(function (response) {
-//         console.log(response);
-//     })
-// }
 
-// function addEmpl() {
-//     inquirer.prompt([
-//         {
-//             type: "input",
-//             message: "Input first name:",
-//             name: "first_name"
-//         },
-//         {
-//             type: "input",
-//             message: "Input last name:",
-//             name: "last_name"
-//         },
-//         {
-//             type: "input",
-//             message: "Input role id:",
-//             name: "role_id"
-//         },
-//         {
-//             type: "input",
-//             message: "Input manager id:",
-//             name: "manager_id"
-//         }
-//     ])
-//         .then(function (response) {
-//             console.log(response);
-//         })
-// }
 
 // function viewDept() {
 
