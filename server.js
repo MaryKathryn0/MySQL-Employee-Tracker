@@ -1,7 +1,8 @@
 var mysql = require("mysql");
 var { askMainMenu, getDepartment, selectDepartment, askRoleInfo, getDeptId,
     addRole, getRoles, selectRole, getRoleId, deleteRole, getEmployees,
-    emplByDept, getManager, selectManager, getEmpsByManager, getEmplName, selectEmpManager, getEmpId, addEmployee } = require("./functions/allfunctions");
+    emplByDept, getManager, selectManager, getEmpsByManager, getEmplName,
+    selectEmpManager, getEmpId, addEmployee, getEmployeeName, selectEmployee, updateRole, askNewDept, addDept } = require("./functions/allfunctions");
 var inquirer = require("inquirer");
 var connection = mysql.createConnection({
     host: "localhost",
@@ -119,10 +120,14 @@ async function start() {
     }
     else if (menu === "Update Employee Role"){
         //get list of employees
-        employeeList = await getEmployees(connection);
+        employeeList = await getEmployeeName(connection);
+        console.log(employeeList);
         // select employee
-        // // emplSelected = await selectEmployee(employeeList);
+        emplSelected = await selectEmployee(employeeList);
+        console.log(emplSelected);
         // get employee ID
+        empId = await getEmpId(connection,emplSelected.employee);
+        console.log(empId);
         // get list of Roles
         roleList = await getRoles(connection);
         // select role
@@ -130,75 +135,26 @@ async function start() {
         //get ID of role
         roleID = await getRoleId(connection, roleSelected.role);
         // update employee to new role
+        results = await updateRole(connection, roleID[0].id, empId[0].id)
+        console.log(`Inserted ${results.affectedRows} entries`);
+        start();
+    }
+    else if (menu === "Add Department") {
+        // ask user for department name
+        deptInfo = await askNewDept();
+        console.log("Dept Info: ", deptInfo);
+        // add department to database
+        results = await addDept(connection, deptInfo.deptname)
+        console.log(`Inserted ${results.affectedRows} entries`);
+        start();
+    }
+    else if (menu === "Exit") {
+        connection.end()
+        console.clear()
+        process.exit(0)
     }
 }
 
-// function start() {
-
-
-//     inquirer.prompt([
-//         {
-//             type: "list",
-//             message: "Choose from the following actions:",
-//             name: "action",
-//             choices: [
-//                 "Add departments",
-//                 "Add roles",
-//                 "Add employees",
-//                 "View employees by department",
-//                 "View employees by role",
-//                 "View all employees",
-//                 "Update employee role",
-//                 "Exit"
-//             ]
-//         },
-//     ])
-//         .then(async function (response) {
-
-//             switch (response.action) {
-//                 case "Add departments":
-//                     //addDept();
-//                     start()
-//                     break;
-
-//                 case "Add roles":
-//                     results = await addRole(connection);
-//                     console.log(`Inserted ${results.affectedRows} entries`);
-//                     start()
-//                     break;
-
-//                 case "Add employees":
-//                     //addEmpl();
-//                     start()
-//                     break;
-
-//                 case "View departments":
-//                     //viewDept();
-//                     start()
-//                     break;
-
-//                 case "View roles":
-//                     //viewRole();
-//                     start()
-//                     break;
-
-//                 case "View employees":
-//                     //viewEmpl();
-//                     start()
-//                     break;
-
-//                 case "Update employee role":
-//                     //updateRole();
-//                     start();
-//                     break;
-
-//                 case "Exit":
-//                     //exit();
-//                     start();
-//                     break;
-//             }
-//         });
-// }
 
 
 

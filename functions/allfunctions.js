@@ -233,15 +233,61 @@ function addEmployee(connection, empName, roleID, mngID) {
     })
 }
 
-// function selectEmployee(roles) {
-//     employeeeList = employees.map(el => el.empName);
-//     return inquirer.prompt([{
-//         type: "list",
-//         message: "select employee",
-//         name: "employee",
-//         choices: employeeList
-//     }])
-// }
+function getEmployeeName(connection) {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT CONCAT(first_name, ' ', last_name) AS employee FROM employee", function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
+
+
+function selectEmployee(employee) {
+    employeeList = employee.map(el => el.employee);
+    return inquirer.prompt([{
+        type: "list",
+        message: "select employee",
+        name: "employee",
+        choices: employeeList
+    }])
+}
+
+function updateRole(connection, role_id, empId) {
+    return new Promise((resolve, reject) => {
+        connection.query("UPDATE employee SET role_id = ? WHERE employee.id = ?", [role_id,empId], function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+}
+
+function askNewDept() {
+    return inquirer.prompt([{
+        type: "input",
+        message: "Enter department name",
+        name: "deptname"
+    }])
+}
+
+function addDept(connection,dept) {
+    return new Promise((resolve, reject) => {
+        let sqlQuery = "INSERT INTO department (name)";
+        sqlQuery += "VALUES (?)";
+        connection.query(sqlQuery, dept, function (err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        })
+    })
+
+}
+
 
 
 module.exports = {
@@ -263,39 +309,13 @@ module.exports = {
     getEmplName,
     selectEmpManager,
     getEmpId,
-    addEmployee
+    addEmployee,
+    getEmployeeName,
+    selectEmployee,
+    updateRole,
+    askNewDept, 
+    addDept
 }
 
-// function addDept() {
-//     inquirer.prompt({
-//         type: "input",
-//         message: "Input department name"
-//     })
-//         .then(function (response) {
-//             console.log(response);
-//         })
-// }
-
-// function getDepartments(connection) {
-//     return new Promise((resolve, reject) => {
-//         connection.query("SELECT name FROM department", function (err, data) {
-//             if (err)
-//                 reject(err);
-//             else
-//                 resolve(data);
-//         })
-//     })
-// }
 
 
-
-// function viewDept() {
-
-// }
-
-// function viewRole() {
-//     
-// }
-
-// function viewEmpl() {
-//}
